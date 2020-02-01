@@ -5,7 +5,7 @@ import math
 import experiment_testbed
 
 
-def get_rewards(means, times_list, optimal_list):
+def get_rewards(means, times_list, optimal_list, confidence):
     means1 = means.copy()
     times_selected1 = times_list.copy()
     q = np.zeros((2000, 10))
@@ -13,6 +13,7 @@ def get_rewards(means, times_list, optimal_list):
     optimal_selection_list = list()
     n_bandits = len(means1)
     n_iterations = 1000
+    n_arms = len(means1[0])
 
     # init_selection = np.random.normal(means1, 1)
     # reward_list.append(np.mean(init_selection))
@@ -22,8 +23,8 @@ def get_rewards(means, times_list, optimal_list):
         optimal_selection = 0
         for j in range(0, n_bandits):
             ucb_list = list()
-            for k in range(10):
-                ucb_list.append(q[j][k] + math.sqrt((2 * math.log(i)) / times_selected1[j][k]))
+            for k in range(n_arms):
+                ucb_list.append(q[j][k] + confidence * math.sqrt((2 * math.log(i)) / times_selected1[j][k]))
             action = np.argmax(ucb_list)
 
             if action == optimal_list[j]:
@@ -52,17 +53,23 @@ bandits = 2000
 arms = 10
 means_list, times_selected = experiment_testbed.initialize(bandits, arms)
 
-optimal_arms = np.argmax(means_list, 1)
-rewards, optimal_selections = get_rewards(means_list, times_selected, optimal_arms)
-fig_rewards.plot(x_axis, rewards)
-fig_optimal.plot(x_axis, optimal_selections)
+confidence_list = [1, 0.98, 0.95]
+
+for i in range(0, len(confidence_list)):
+    curr_confidence = confidence_list[i]
+    optimal_arms = np.argmax(means_list, 1)
+    rewards, optimal_selections = get_rewards(means_list, times_selected, optimal_arms, curr_confidence)
+    fig_rewards.plot(x_axis, rewards, label='confidence = ' + str(curr_confidence))
+    fig_optimal.plot(x_axis, optimal_selections, label='confidence = ' + str(curr_confidence))
 
 fig_rewards.set_xlabel('Steps')
 fig_rewards.set_ylabel('Average Reward')
 fig_rewards.title.set_text('Average Reward vs Steps')
+fig_rewards.legend(loc='lower right')
 
 fig_optimal.set_xlabel('Steps')
 fig_optimal.set_ylabel(r'$\%$ Optimal Action')
 fig_optimal.title.set_text(r'$\%$ Optimum Action vs Steps')
+fig_optimal.legend(loc='lower right')
 
 plt.show()

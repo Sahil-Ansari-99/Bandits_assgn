@@ -60,13 +60,13 @@ def run_mea(means, epsilon, delta):
 bandits = 2000
 arms = 10
 means_list, times_selected = experiment_testbed.initialize(bandits, arms)
-epsilons = [0.1, 0.2]
-deltas = [0.1, 0.5]
+epsilons = [0.1, 0.2, 0.3]
+deltas = [0.1, 0.2, 0.3]
 
 fig_rewards = plt.figure().add_subplot(111)
 fig_optimum = plt.figure().add_subplot(111)
 
-for i in range(0, 2):
+for i in range(0, 3):
     curr_epsilon = epsilons[i]
     curr_delta = deltas[i]
     best_arms, rewards, optimum_list, x_axis = run_mea(means_list, curr_epsilon, curr_delta)
