@@ -50,7 +50,7 @@ fig_optimal = plt.figure().add_subplot(111)
 for i in range(0, len(eps)):
     curr_epsilon = eps[i]
     bandits = 2000
-    arms = 1000
+    arms = 10
     means_list, times_selected = experiment_testbed.initialize(bandits, arms)
 
     optimal_arms = np.argmax(means_list, 1)
