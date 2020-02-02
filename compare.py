@@ -8,10 +8,11 @@ import matplotlib.pyplot as plt
 def eps_rewards(means, times_list, epsilon, optimal_list):
     means1 = means.copy()
     times_selected1 = times_list.copy()
-    q = np.zeros((2000, 10))
+    n_bandits = len(means1)
+    n_arms = len(means1[0])
+    q = np.zeros((n_bandits, n_arms))
     reward_list = list()
     optimal_selection_list = list()
-    n_bandits = len(means1)
     n_iterations = 1000
 
     for i in range(0, n_iterations):
@@ -23,7 +24,7 @@ def eps_rewards(means, times_list, epsilon, optimal_list):
             if x > epsilon:
                 action = np.argmax(q[j])
             else:
-                action = random.randint(0, 9)
+                action = random.randint(0, n_arms-1)
 
             if action == optimal_list[j]:
                 optimal_selection += 1
@@ -42,10 +43,11 @@ def eps_rewards(means, times_list, epsilon, optimal_list):
 def softmax_rewards(means, times_list, temperature, optimal_list):
     means1 = means.copy()
     times_selected1 = times_list.copy()
-    q = np.zeros((2000, 10))
+    n_bandits = len(means1)
+    n_arms = len(means1[0])
+    q = np.zeros((n_bandits, n_arms))
     reward_list = list()
     optimal_selection_list = list()
-    n_bandits = len(means1)
     n_iterations = 1000
 
     for i in range(0, n_iterations):
