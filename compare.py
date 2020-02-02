@@ -72,18 +72,19 @@ def softmax_rewards(means, times_list, temperature, optimal_list):
 
 def ucb_rewards(means, times_list, optimal_list, confidence):
     means1 = means.copy()
+    n_bandits = len(means1)
+    n_arms = len(means1[0])
     times_selected1 = times_list.copy()
-    q = np.zeros((2000, 10))
+    q = np.zeros((n_bandits, n_arms))
     reward_list = list()
     optimal_selection_list = list()
-    n_bandits = len(means1)
     n_iterations = 1000
-    n_arms = len(means1[0])
 
     # init_selection = np.random.normal(means1, 1)
     # reward_list.append(np.mean(init_selection))
 
     for i in range(1, n_iterations + 1):
+        print(i)
         curr_reward = 0
         optimal_selection = 0
         for j in range(0, n_bandits):
@@ -116,7 +117,7 @@ for i in range(0, n_iterations):
     x_axis.append(i)
 
 n_bandits = 2000
-n_arms = 10
+n_arms = 1000
 print('starting greedy')
 means_list, times_selected = experiment_testbed.initialize(n_bandits, n_arms)
 optimal_list = np.argmax(means_list, 1)
